@@ -10,3 +10,7 @@ Bootcamp project to forecast **Transmission System Demand (TSD)** in Great Brita
 ## 🧠 Business Context 
 - Forecast dipakai untuk: penentuan kapasitas **cadangan daya**, jadwal **charging/discharging** storage, **demand-response** industri, dan **arah investasi** energi terbarukan.
 
+## 📂 Dataset
+Karena ukuran file besar, dataset disimpan di Google Drive:
+👉 [Download di sini](https://drive.google.com/file/d/16kKCVAWyZ1jOgc2EnXsCmHpAIEvXMaew/view?usp=drive_link)
+
