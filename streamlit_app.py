@@ -8,42 +8,20 @@ from datetime import timedelta
 
 st.set_page_config(page_title="Electricity Demand Forecast in GB", page_icon="⚡", layout="wide")
 
-# ------------------ CONFIG ------------------
-# LOCAL dataset path (the file you uploaded)
-DATA_PATH = r"C:\Users\nurai\OneDrive\Dokumen\GitHub\Final-Project-Data-Science-\historic_demand_2009_2024_noNaN.csv"
+DATA_PATH = "historic_demand_2009_2024_noNaN.csv"
 
-
-# If you later want Drive-based loading instead, leave DATA_PATH empty and set DRIVE_FILE_ID
-DRIVE_FILE_ID = ""  # e.g. "16kKCVAWyZ1jOgc2EnXsCmHpAIEvXMaew"
-
-# Admin secret (simple toggle to show raw data). Keep empty for production.
-ADMIN_TOKEN = "showme"  # change or set to None to disable
-
-# ------------------ DATA LOADER ------------------
 @st.cache_data
-def load_data_local(path):
-    if not os.path.exists(path):
-        raise FileNotFoundError(f"Local data not found: {path}")
-    df = pd.read_csv(path)
-    return df
+def load_data():
+    if os.path.exists(DATA_PATH):
+        df = pd.read_csv(DATA_PATH)
+        df.columns = [c.strip() for c in df.columns]
+        return df
+    else:
+        st.error("Dataset not found. Make sure the CSV is committed to the GitHub repo!")
+        st.stop()
 
-def load_data_from_drive(file_id, local_cache="data_cached.csv"):
-    import gdown
-    url = f"https://drive.google.com/file/d/16kKCVAWyZ1jOgc2EnXsCmHpAIEvXMaew/view?usp=drive_link={file_id}"
-    if not os.path.exists(local_cache):
-        gdown.download(url, local_cache, quiet=False)
-    return pd.read_csv(local_cache)
+df = load_data()
 
-# ------------------ LOAD (behind-the-scenes) ------------------
-# priority: if local file exists, use it. else try Drive id.
-df = None
-if DATA_PATH and os.path.exists(DATA_PATH):
-    df = load_data_local(DATA_PATH)
-elif DRIVE_FILE_ID:
-    df = load_data_from_drive(DRIVE_FILE_ID)
-else:
-    st.error("No dataset available. Put dataset file in repo or set DRIVE_FILE_ID.")
-    st.stop()
 
 # ------------------ PREPROCESS (automated, no raw dump) ------------------
 # basic cleaning + detection
